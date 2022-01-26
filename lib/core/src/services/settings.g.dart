@@ -41,7 +41,6 @@ Map<String, dynamic> _$GlobalSettingsToJson(GlobalSettings instance) =>
 
 const _$ApisEnumMap = {
   Apis.ecoleDirecte: 'ecoleDirecte',
-  Apis.fakeApi: 'fakeApi',
   Apis.kdecole: 'kdecole',
 };
 

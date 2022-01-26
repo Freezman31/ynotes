@@ -8,10 +8,11 @@ class _AuthRepository extends AuthRepository {
       {required String username,
       required String password,
       Map<String, dynamic>? parameters}) async {
+    print('login');
     if (parameters == null || !parameters.containsKey('url')) {
       return const Response(error: 'Missing url parameter');
     }
-    if (parameters.containsKey('token')) {
+    if (parameters.containsKey('token') || username == '') {
       print('Logging in with token');
       client = k.Client.fromToken(password, parameters['url']);
     } else {
