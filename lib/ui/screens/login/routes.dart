@@ -1,6 +1,9 @@
 import 'package:ynotes/app/app.dart';
 import 'package:ynotes/ui/screens/login/login.dart';
 import 'package:ynotes/ui/screens/login/sub_pages/ecoledirecte.dart';
+import 'package:ynotes/ui/screens/login/sub_pages/kdecole/kdecole.dart';
+import 'package:ynotes/ui/screens/login/sub_pages/kdecole/kdecole_id.dart';
+import 'package:ynotes/ui/screens/login/sub_pages/kdecole/kdecole_token.dart';
 import 'package:ynotes/ui/screens/login/sub_pages/pronote/geolocation/geolocation.dart';
 import 'package:ynotes/ui/screens/login/sub_pages/pronote/geolocation/results.dart';
 import 'package:ynotes/ui/screens/login/sub_pages/pronote/geolocation/search.dart';
@@ -24,4 +27,7 @@ const List<AppRoute> loginRoutes = [
   AppRoute(path: "$_basePath/pronote/geolocation/results", widget: LoginPronoteGeolocationResultsPage(), show: false),
   AppRoute(path: "$_basePath/pronote/geolocation/search", widget: LoginPronoteGeolocationSearchPage(), show: false),
   AppRoute(path: "$_basePath/pronote/qrcode", widget: LoginPronoteQrcodePage(), show: false),
+  AppRoute(path: "$_basePath/kdecole", widget: LoginKdecolePage(), show: false),
+  AppRoute(path: "$_basePath/kdecole/id", widget: LoginKdecoleIdPage(), show: false),
+  AppRoute(path: "$_basePath/kdecole/token", widget: LoginKdecoleTokenPage(), show: false),
 ];

@@ -7,9 +7,13 @@ SchoolApi schoolApiManager(Apis api) {
   switch (api) {
     case Apis.ecoleDirecte:
       _api = EcoleDirecteApi();
+      break;
+    case Apis.kdecole:
+      _api = KdecoleApi();
+      break;
   }
   Logger.log("SCHOOL API MANAGER", "Selected: ${_api.metadata.name}");
   return _api;
 }
 
-final List<SchoolApi> schoolApis = [EcoleDirecteApi()];
+final List<SchoolApi> schoolApis = [EcoleDirecteApi(), KdecoleApi()];

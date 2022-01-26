@@ -12,6 +12,7 @@ class LoginContent {
   static final ecoleDirecte = _EcoleDirecte();
   static final demos = _Demos();
   static final pronote = _Pronote();
+  static final kdecole = _Kdecole();
 }
 
 class _Login {
@@ -23,6 +24,12 @@ class _Login {
 
 class _EcoleDirecte {
   final subtitle = "EcoleDirecte";
+}
+
+class _Kdecole {
+  final subtitle = "Kdecole";
+  final idSubtitle = "Identifiants Temporaires";
+  final tokenSubtitle = "Token";
 }
 
 class _Demos {
