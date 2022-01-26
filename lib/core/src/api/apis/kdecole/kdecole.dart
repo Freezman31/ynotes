@@ -2,6 +2,7 @@ library kdecole;
 
 import 'dart:math';
 
+import 'package:http/src/request.dart';
 import 'package:kdecole_api/kdecole_api.dart' as k;
 import 'package:ynotes/core/api.dart';
 import 'package:ynotes/core/src/utilities/app_colors.dart';
