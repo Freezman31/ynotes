@@ -96,6 +96,7 @@ abstract class GradesModule<R extends Repository> extends Module<R> {
     }
     // We save all the data. Here is an overview of the process:
     // 1. We retrieve the custom grades
+    // 1.5 We retrieve the filters and assigned the new corresponding subjects
     // 2. For each custom grade, we update its subject and period to a new one, not
     //    saved in Isar yet. If the subject or period is not found, we delete the grade.
     // 3. We clear all the data
@@ -105,6 +106,15 @@ abstract class GradesModule<R extends Repository> extends Module<R> {
     await offline.writeTxn((isar) async {
       // STEP 1
       final customGrades = await isar.grades.filter().customEqualTo(true).findAll();
+      // STEP 1.5
+      final filters = await isar.subjectsFilters.where().findAll();
+      for (final filter in filters) {
+        await filter.subjects.load();
+        final List<String> subjectsIds = filter.subjects.map((subject) => subject.entityId).toSet().toList();
+        final List<Subject> subjects = __subjects.where((subject) => subjectsIds.contains(subject.entityId)).toList();
+        filter.subjects.clear();
+        filter.subjects.addAll(subjects);
+      }
       // STEP 2
       for (final grade in customGrades) {
         await grade.subject.load();
@@ -123,13 +133,18 @@ abstract class GradesModule<R extends Repository> extends Module<R> {
       await isar.periods.clear();
       await isar.subjects.clear();
       await isar.grades.clear();
+      await isar.subjectsFilters.clear();
       // STEP 4
       await isar.periods.putAll(__periods);
       await isar.subjects.putAll(__subjects);
       await isar.grades.putAll(__grades);
       // STEP 5
       await isar.grades.putAll(customGrades);
+      await isar.subjectsFilters.putAll(filters);
       // STEP 6
+      await Future.forEach(__subjects, (Subject subject) async {
+        await subject.period.save();
+      });
       await Future.forEach(__grades, (Grade grade) async {
         await grade.period.save();
         await grade.subject.save();
@@ -143,6 +158,7 @@ abstract class GradesModule<R extends Repository> extends Module<R> {
     await setCurrentFilter();
     fetching = false;
     notifyListeners();
+    Logger.log("GRADES MODULE", "Fetch successful");
     return const Response();
   }
 
@@ -150,15 +166,19 @@ abstract class GradesModule<R extends Repository> extends Module<R> {
   Future<void> setCurrentPeriod([Period? period]) async {
     String? id;
     if (period == null) {
-      final DateTime now = DateTime.now();
-      id = periods
-          .firstWhereOrNull((period) =>
-              now.isAfter(period.startDate) &&
-              (now.isBefore(period.endDate) ||
-                  (now.year == period.endDate.year &&
-                      now.month == period.endDate.month &&
-                      now.day == period.endDate.day)))
-          ?.entityId;
+      if (_Storage.values.currentPeriodId == null) {
+        final DateTime now = DateTime.now();
+        id = periods
+            .firstWhereOrNull((period) =>
+                now.isAfter(period.startDate) &&
+                (now.isBefore(period.endDate) ||
+                    (now.year == period.endDate.year &&
+                        now.month == period.endDate.month &&
+                        now.day == period.endDate.day)))
+            ?.entityId;
+      } else {
+        id = _Storage.values.currentPeriodId;
+      }
     } else {
       id = period.entityId;
     }
@@ -171,7 +191,11 @@ abstract class GradesModule<R extends Repository> extends Module<R> {
   Future<void> setCurrentFilter([SubjectsFilter? filter]) async {
     String id;
     if (filter == null) {
-      id = filters.first.entityId;
+      if (_Storage.values.currentFilterId == null) {
+        id = filters.first.entityId;
+      } else {
+        id = _Storage.values.currentFilterId!;
+      }
     } else {
       id = filter.entityId;
     }
@@ -230,7 +254,7 @@ abstract class GradesModule<R extends Repository> extends Module<R> {
   /// Adds a [filter] to [customFilters].
   Future<Response<void>> addFilter(SubjectsFilter filter) async {
     await offline.writeTxn((isar) async {
-      await isar.subjects.putAll(filter.subjects.toList());
+      // await isar.subjects.putAll(filter.subjects.toList());
       await isar.subjectsFilters.put(filter);
       await filter.subjects.save();
     });
@@ -243,6 +267,9 @@ abstract class GradesModule<R extends Repository> extends Module<R> {
     await offline.writeTxn((isar) async {
       await isar.subjectsFilters.delete(filter.id!);
     });
+    if (filter.entityId == currentFilter.entityId) {
+      await setCurrentFilter(_defaultFilters.first);
+    }
     notifyListeners();
     return const Response();
   }
@@ -272,6 +299,18 @@ abstract class GradesModule<R extends Repository> extends Module<R> {
     });
     notifyListeners();
     return const Response();
+  }
+
+  /// Updates a subject.
+  Future<void> updateSubject(Subject subject) async {
+    final List<Subject> _subjects = subjects.where((e) => e.entityId == subject.entityId).map((e) {
+      e.color = subject.color;
+      return e;
+    }).toList();
+    await offline.writeTxn((isar) async {
+      await isar.subjects.putAll([subject, ..._subjects]);
+    });
+    notifyListeners();
   }
 
   @override

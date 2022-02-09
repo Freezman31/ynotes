@@ -5,7 +5,7 @@ import 'package:ynotes/app/app.dart';
 import 'package:ynotes/core/api.dart';
 import 'package:ynotes/core/extensions.dart';
 import 'package:ynotes/ui/components/components.dart';
-import 'package:ynotes/ui/screens/grades/widgets/grade_details_sheet.dart';
+import 'package:ynotes/ui/screens/grades/widgets/widgets.dart';
 import 'package:ynotes_packages/components.dart';
 import 'package:ynotes_packages/theme.dart';
 import 'package:ynotes_packages/utilities.dart';
@@ -26,7 +26,7 @@ class SubjectsList extends StatelessWidget {
           child: const SubjectsFiltersManager(),
         ),
         YVerticalSpacer(YScale.s2),
-        ...module.subjects
+        ...period.sortedSubjects
             .where((e) {
               return (module.currentFilter.entityId == "all" || module.currentFilter.subjects.contains(e));
             })
@@ -44,13 +44,11 @@ class _SubjectContainer extends StatelessWidget {
   const _SubjectContainer(this.subject, this.period, this.simulate, {Key? key}) : super(key: key);
 
   List<Grade> get grades {
-    final List<Grade> _grades = subject.grades.toList()..sort((a, b) => a.entryDate.compareTo(b.entryDate));
+    final List<Grade> _grades = subject.sortedGrades;
     for (final g in _grades) {
       g.load();
     }
-    return _grades
-        .where((grade) => (simulate ? true : !grade.custom) && grade.period.value?.entityId == period.entityId)
-        .toList();
+    return _grades.where((grade) => (simulate ? true : !grade.custom)).toList();
   }
 
   double get _average => schoolApi.gradesModule.calculateAverageFromGrades(grades, bySubject: true);
@@ -70,12 +68,17 @@ class _SubjectContainer extends StatelessWidget {
           Material(
             borderRadius: _borderRadius,
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                YModalBottomSheets.show(
+                    context: context,
+                    child:
+                        SubjectDetailsSheet(subject: subject, average: _average, period: period, simulate: simulate));
+              },
               borderRadius: _borderRadius,
               hoverColor: subject.color.lightColor,
               highlightColor: subject.color.lightColor,
               child: Ink(
-                padding: EdgeInsets.symmetric(vertical: YScale.s2, horizontal: YScale.s3),
+                padding: EdgeInsets.symmetric(vertical: YScale.s2, horizontal: YScale.s4),
                 decoration: BoxDecoration(
                   color: subject.color.backgroundColor,
                   borderRadius: _borderRadius,

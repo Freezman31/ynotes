@@ -6,6 +6,7 @@ import 'package:ynotes/app/app.dart';
 import 'package:ynotes/core/utilities.dart';
 import 'package:ynotes/core/api.dart';
 import 'package:ynotes/ui/components/components.dart';
+import 'package:ynotes/ui/screens/grades/routes.dart';
 import 'package:ynotes/ui/screens/grades/widgets/widgets.dart';
 import 'package:ynotes_packages/components.dart';
 import 'package:ynotes_packages/theme.dart';
@@ -21,9 +22,22 @@ class GradesPage extends StatefulWidget {
 class _GradesPageState extends State<GradesPage> {
   final GradesModule module = schoolApi.gradesModule;
   bool simulate = false;
+  bool init = false;
 
   @override
   Widget build(BuildContext context) {
+    if (!init) {
+      final GradesPageArguments? args = AppRouter.getArgs<GradesPageArguments?>(context);
+      if (args != null) {
+        module.setCurrentPeriod(args.grade.period.value!);
+        Future.delayed(const Duration(milliseconds: 500), () {
+          setState(() {
+            init = true;
+          });
+          YModalBottomSheets.show(context: context, child: GradeDetailsSheet(args.grade, false));
+        });
+      }
+    }
     return ChangeNotifierConsumer<GradesModule>(
         controller: module,
         builder: (context, module, _) {
@@ -48,7 +62,7 @@ class _GradesPageState extends State<GradesPage> {
               actions: [
                 if (simulate) const YBadge(text: "SIMULATEUR"),
                 YHorizontalSpacer(YScale.s2),
-                const YBadge(text: "ALPHA", color: YColor.danger),
+                const YBadge(text: "BETA", color: YColor.danger),
                 if (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
                   YIconButton(icon: Icons.refresh_rounded, onPressed: refresh),
               ],

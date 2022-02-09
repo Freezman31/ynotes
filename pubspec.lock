@@ -601,21 +601,21 @@ packages:
       name: isar
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.4"
   isar_flutter_libs:
     dependency: "direct main"
     description:
       name: isar_flutter_libs
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.4"
   isar_generator:
     dependency: "direct dev"
     description:
       name: isar_generator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.4"
   js:
     dependency: transitive
     description:
@@ -723,6 +723,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  new_version:
+    dependency: "direct main"
+    description:
+      name: new_version
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.0"
   nm:
     dependency: transitive
     description:
@@ -794,7 +801,7 @@ packages:
     source: hosted
     version: "1.0.4"
   path:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: path
       url: "https://pub.dartlang.org"
@@ -961,13 +968,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.1"
-  queue:
-    dependency: "direct main"
-    description:
-      name: queue
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.1.0+1"
   quiver:
     dependency: transitive
     description:
@@ -1265,10 +1265,10 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: dfb5ee9e8f0fed06fe7193a4025d9c6851a139f9
+      resolved-ref: cbc526d92b926f75c7095e08fab61537f6bdeac3
       url: "https://github.com/EduWireApps/ynotes-packages"
     source: git
-    version: "0.6.5"
+    version: "0.6.6"
 sdks:
   dart: ">=2.15.0 <3.0.0"
   flutter: ">=2.5.0"
