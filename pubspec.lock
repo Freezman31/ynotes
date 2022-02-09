@@ -637,6 +637,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.4"
+  kdecole_api:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: e36692d68a6435f4864fccc4c27ee75f0a22f800
+      url: "https://github.com/EduWireApps/kdecole-api-dart"
+    source: git
+    version: "1.0.0"
   latlong2:
     dependency: "direct main"
     description:
@@ -721,6 +730,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  new_version:
+    dependency: "direct main"
+    description:
+      name: new_version
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.0"
   nm:
     dependency: transitive
     description:
@@ -973,6 +989,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1+1"
+  request:
+    dependency: transitive
+    description:
+      name: request
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1"
   shake_flutter:
     dependency: "direct main"
     description:
