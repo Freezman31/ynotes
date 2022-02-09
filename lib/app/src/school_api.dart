@@ -5,10 +5,13 @@ late SchoolApi schoolApi;
 SchoolApi schoolApiManager(Apis api) {
   late SchoolApi _api;
   switch (api) {
-    case Apis.ecoleDirecte:
+    /*case Apis.ecoleDirecte:
       _api = EcoleDirecteApi();
       break;
     case Apis.kdecole:
+      _api = KdecoleApi();
+      break;*/
+    default:
       _api = KdecoleApi();
       break;
   }

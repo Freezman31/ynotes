@@ -5,17 +5,21 @@ class _HomeworkRepository extends HomeworkRepository {
 
   @override
   Future<Response<Map<String, dynamic>>> get() async {
+    /*
     try {
+      await client.setUserData();
       final Map<String, dynamic> map = {"homework": await getHw()};
       return Response(data: map);
     } catch (e) {
-      return Response(error: '$e');
-    }
+      Logger.error(e);
+      return Response(error: 'On fetching homeworks : $e');
+    }*/
+    return const Response(error: 'Not implemented');
   }
 
   @override
   Future<Response<List<Homework>>> getDay(DateTime date) async {
-    try {
+    /*try {
       var hw = await getHw();
       return Response(
           data: hw
@@ -24,13 +28,19 @@ class _HomeworkRepository extends HomeworkRepository {
                   element.date.month == date.month)
               .toList());
     } catch (e) {
+      print(e);
       return Response(error: '$e');
     }
   }
 
   Future<List<Homework>> getHw() async {
     var ret = <Homework>[];
-    var hw = await client.getHomeworks();
+    var tHw = await client.getHomeworks();
+    var hw = <k.Homework>[];
+
+    for (var t in tHw) {
+      hw.add(await client.getFullHomework(t));
+    }
     for (var e in hw) {
       ret.add(Homework(
         content: e.content,
@@ -39,12 +49,11 @@ class _HomeworkRepository extends HomeworkRepository {
         date: e.date,
         assessment: false,
         entryDate: e.date,
-        id: e.uuid.toString(),
-        subjectId: e.sessionUuid.toString(),
-        documentsIds: [],
+        entityId: e.uuid.toString(),
         pinned: false,
       ));
     }
-    return ret;
+    return ret;*/
+    return const Response(error: 'Not implemented');
   }
 }

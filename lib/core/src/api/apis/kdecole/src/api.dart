@@ -13,11 +13,11 @@ final Metadata metadata = Metadata(
 );
 
 const ModulesSupport modulesSupport = ModulesSupport(
-  grades: false,
-  schoolLife: false,
-  emails: false,
+  grades: true,
+  schoolLife: true,
+  emails: true,
   homework: true,
-  documents: false,
+  documents: true,
 );
 
 class KdecoleApi extends SchoolApi implements SchoolApiModules {

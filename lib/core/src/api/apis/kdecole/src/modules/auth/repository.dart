@@ -14,30 +14,30 @@ class _AuthRepository extends AuthRepository {
     }
     if (parameters.containsKey('token') || username == '') {
       print('Logging in with token');
-      client = k.Client.fromToken(password, parameters['url']);
+      client = k.Client.fromToken(token: password, url: parameters['url']);
     } else {
       print('Logging in with username and password');
-      client = k.Client(parameters['url'], username, password);
+      client = k.Client(
+          url: parameters['url'], username: username, password: password);
     }
     await client.setUserData();
-    final data = client.getUserData();
+    final data = client.info;
     AppAccount account = AppAccount(
       firstName: data.fullName.split(' ')[0],
       lastName: data.fullName.split(' ')[1],
-      id: data.id.toString(),
-      accounts: [],
+      entityId: data.id.toString(),
     );
-
-    /*api.modulesAvailability.emails = client.perms.emails;
-    api.modulesAvailability.homework = client.perms.homeworks;
-    api.modulesAvailability.grades = client.perms.marks;
-    await api.modulesAvailability.save();*/
+    api.modulesAvailability.schoolLife = false; //client.permissions.schoolLife;
+    api.modulesAvailability.emails = client.permissions.emails;
+    api.modulesAvailability.homework = false; //client.permissions.homeworks;
+    api.modulesAvailability.grades = client.permissions.marks;
+    await api.modulesAvailability.save();
     api.refreshModules();
 
     return Response(data: {
       'appAccount': account,
       'schoolAccount': SchoolAccount(
-        id: data.id.toString(),
+        entityId: data.id.toString(),
         school: data.etab,
         firstName: data.fullName.split(' ')[0],
         lastName: data.fullName.split(' ')[1],
