@@ -4,7 +4,7 @@ late k.Client client;
 
 final Metadata metadata = Metadata(
   name: "KDecole",
-  imagePath: "assets/images/icons/pronote/PronoteIcon.png",
+  imagePath: "assets/images/icons/kdecole/Kdecole.png",
   beta: true,
   color: AppColors.lightBlue,
   api: Apis.kdecole,

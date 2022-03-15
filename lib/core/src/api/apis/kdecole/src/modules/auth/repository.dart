@@ -5,20 +5,16 @@ class _AuthRepository extends AuthRepository {
 
   @override
   Future<Response<Map<String, dynamic>>> login(
-      {required String username,
-      required String password,
-      Map<String, dynamic>? parameters}) async {
-    print('login');
+      {required String username, required String password, Map<String, dynamic>? parameters}) async {
     if (parameters == null || !parameters.containsKey('url')) {
       return const Response(error: 'Missing url parameter');
     }
     if (parameters.containsKey('token') || username == '') {
-      print('Logging in with token');
+      Logger.log('[Kdecole AUTH]', 'Logging in with token');
       client = k.Client.fromToken(token: password, url: parameters['url']);
     } else {
-      print('Logging in with username and password');
-      client = k.Client(
-          url: parameters['url'], username: username, password: password);
+      Logger.log('[Kdecole AUTH]', 'Logging in with username and password');
+      client = k.Client(url: parameters['url'], username: username, password: password);
     }
     await client.setUserData();
     final data = client.info;

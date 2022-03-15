@@ -1,10 +1,10 @@
 library kdecole;
 
-//TODO REMOVE THAT
-import 'dart:convert';
+///Only for testing
+///import 'dart:convert';
+///import 'package:http/http.dart' as http;
 import 'dart:math';
 
-import 'package:http/http.dart' as http;
 import 'package:http/src/request.dart';
 import 'package:kdecole_api/kdecole_api.dart' as k;
 import 'package:ynotes/core/api.dart';
