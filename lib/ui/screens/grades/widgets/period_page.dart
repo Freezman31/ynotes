@@ -83,6 +83,7 @@ class _Stats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(period.grades);
     return Padding(
       padding: YPadding.p(YScale.s4),
       child: Column(

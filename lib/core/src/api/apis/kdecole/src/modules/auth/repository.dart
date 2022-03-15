@@ -30,7 +30,7 @@ class _AuthRepository extends AuthRepository {
     api.modulesAvailability.schoolLife = false; //client.permissions.schoolLife;
     api.modulesAvailability.emails = client.permissions.emails;
     api.modulesAvailability.homework = false; //client.permissions.homeworks;
-    api.modulesAvailability.grades = client.permissions.marks;
+    api.modulesAvailability.grades = true; //client.permissions.marks;
     await api.modulesAvailability.save();
     api.refreshModules();
 
