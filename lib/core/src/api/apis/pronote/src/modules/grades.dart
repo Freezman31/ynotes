@@ -1,6 +1,5 @@
 part of pronote;
 
-
 class PronotePeriod {
   DateTime? end;
 
@@ -28,15 +27,6 @@ class PronotePeriod {
   // end : str
   //     date on which the period ends
 
-  PronotePeriod(PronoteClient client, Map parsedJson) {
-    _client = client;
-    id = parsedJson['N'];
-    name = parsedJson['L'];
-    var inputFormat = DateFormat("dd/MM/yyyy");
-    start = inputFormat.parse(parsedJson['dateDebut']['V']);
-    end = inputFormat.parse(parsedJson['dateFin']['V']);
-  }
-
   ///Return the eleve average, the max average, the min average, and the class average
   average(var json, var codeMatiere) {
     //The services for the period
@@ -54,7 +44,6 @@ class PronotePeriod {
     ];
   }
 
-
   grades(int codePeriode) async {
     //Get grades from the period.
     List<Grade> list = [];
@@ -71,34 +60,35 @@ class PronotePeriod {
 
     var response = (codePeriode == 2) ? a.json() : {};
     */
-    var response = await _client.communication!.post('DernieresNotes', data: jsonData);
+    var response = (await _client.communication.post('DernieresNotes', data: jsonData)).data;
+    var subjects = await request("DernieresNotes", PronoteDisciplineConverter.disciplines, data: jsonData, onglet: 198);
     var grades = safeMapGetter(response, ['donneesSec', 'donnees', 'listeDevoirs', 'V']) ?? [];
     moyenneGenerale = gradeTranslate(safeMapGetter(response, ['donneesSec', 'donnees', 'moyGenerale', 'V']) ?? "");
-    moyenneGeneraleClasse = gradeTranslate(safeMapGetter(response, ['donneesSec', 'donnees', 'moyGeneraleClasse', 'V']) ?? "");
+    moyenneGeneraleClasse =
+        gradeTranslate(safeMapGetter(response, ['donneesSec', 'donnees', 'moyGeneraleClasse', 'V']) ?? "");
 
     var other = [];
     grades.forEach((element) async {
       list.add(Grade(
           value: gradeTranslate(safeMapGetter(element, ["note", "V"]) ?? ""),
           name: element["commentaire"],
-          periodCode: id,
-          periodName: name,
-          disciplineCode: (safeMapGetter(element, ["service", "V", "L"]) ?? "").hashCode.toString(),
-          subdisciplineCode: null,
-          disciplineName: safeMapGetter(element, ["service", "V", "L"]),
-          letters: (safeMapGetter(element, ["note", "V"]) ?? "").contains("|"),
-          weight: safeMapGetter(element, ["coefficient"]).toString(),
-          scale: safeMapGetter(element, ["bareme", "V"]),
-          min: gradeTranslate(safeMapGetter(element, ["noteMin", "V"]) ?? ""),
-          max: gradeTranslate(safeMapGetter(element, ["noteMax", "V"]) ?? ""),
+          //letters: (safeMapGetter(element, ["note", "V"]) ?? "").contains("|"),
+          coefficient: double.parse(safeMapGetter(element, ["coefficient"])),
+          outOf: safeMapGetter(element, ["bareme", "V"]),
+          classMin: gradeTranslate(safeMapGetter(element, ["noteMin", "V"]) ?? ""),
+          classMax: gradeTranslate(safeMapGetter(element, ["noteMax", "V"]) ?? ""),
           classAverage: gradeTranslate(safeMapGetter(element, ["moyenne", "V"]) ?? ""),
-          date: safeMapGetter(element, ["date", "V"]) != null ? DateFormat("dd/MM/yyyy").parse(element["date"]["V"]) : null,
-          notSignificant: gradeTranslate(safeMapGetter(element, ["note", "V"]) ?? "") == "NonNote",
-          testType: "Interrogation",
+          date: safeMapGetter(element, ["date", "V"]) != null
+              ? DateFormat("dd/MM/yyyy").parse(element["date"]["V"])
+              : DateTime.now(),
+          //significant: gradeTranslate(safeMapGetter(element, ["note", "V"]) ?? "") == "NonNote",
+          type: "Interrogation",
           entryDate: safeMapGetter(element, ["date", "V"]) != null
               ? DateFormat("dd/MM/yyyy").parse(safeMapGetter(element, ["date", "V"]))
-              : null,
-          countAsZero: shouldCountAsZero(gradeTranslate(safeMapGetter(element, ["note", "V"]) ?? ""))));
+              : DateTime.now(),
+          significant: shouldCountAsZero(gradeTranslate(safeMapGetter(element, ["note", "V"]) ?? "")))
+        ..period.value = id
+        ..subject.value = null);
       other.add(average(response, (safeMapGetter(element, ["service", "V", "L"]) ?? "").hashCode.toString()));
     });
     return [list, other];

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -12,7 +13,7 @@ const bool _reset = false;
 /// The entry point of the application.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Dev only.
+  // Dev only.²
   if (!kReleaseMode && _reset) {
     await KVS.deleteAll();
     final Directory dir = await FileStorage.getAppDirectory();

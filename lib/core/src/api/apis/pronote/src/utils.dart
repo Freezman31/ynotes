@@ -67,3 +67,39 @@ String _encodeBody(Map<String, dynamic>? body) {
   body ??= {};
   return "data=${jsonEncode(body)}";
 }
+
+gradeTranslate(String value) {
+  List gradeTranslate = [
+    'Absent',
+    'Dispensé',
+    'Non noté',
+    'Inapte',
+    'Non rendu',
+    'Absent zéro',
+    'Non rendu zéro',
+    'Félicitations'
+  ];
+  if (value.contains("|")) {
+    return gradeTranslate[int.parse(value[1]) - 1];
+  } else {
+    return value;
+  }
+}
+
+dynamic mapGet(var map, List path) {
+  assert(path.isNotEmpty);
+  var m = map ?? {};
+  for (int i = 0; i < path.length - 1; i++) {
+    m = m[path[i]] ?? {};
+  }
+
+  return m[path.last];
+}
+
+shouldCountAsZero(String grade) {
+    if (grade == "Absent zéro" || grade == "Non rendu zéro") {
+      return true;
+    } else {
+      return false;
+    }
+  }
